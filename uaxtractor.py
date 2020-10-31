@@ -2,6 +2,7 @@
 
 import argparse
 import re
+import json
 
 BROWSER_PATTERN = re.compile(r'([A-Za-z0-9]+)/((\d+)(\.\d+)+)')
 
@@ -208,4 +209,4 @@ if __name__ == '__main__':
     else:
         obj['category'] = 'other'
 
-    print(obj)
+    print(json.dumps(obj))
