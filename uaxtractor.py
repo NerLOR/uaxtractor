@@ -142,6 +142,9 @@ def parse_browser(data: str):
     elif 'Chrome' in brs:
         name = 'Chrome'
         idx = 'Chrome'
+    else:
+        name = last
+        idx = last
 
     if name == 'Chrome' and last not in ('Chrome', 'Safari'):
         idx = last
