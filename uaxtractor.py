@@ -4,7 +4,7 @@ import argparse
 import re
 import json
 
-BROWSER_PATTERN = re.compile(r'([A-Za-z0-9]+)/((\d+)(\.\d+)+)')
+BROWSER_PATTERN = re.compile(r'([A-Za-z0-9]+)/((\d+)(\.\d+)*)')
 
 WIN_VER = {
     'Windows ME': 'ME',
@@ -126,15 +126,13 @@ def parse_browser(data: str):
         browser = m.group(1)
         fullversion = m.group(2)
         version = m.group(3)
+        print(browser, fullversion)
         if browser == 'Mozilla':
             continue
         n += 1
         if n > 1:
             brs[browser] = {'fullversion': fullversion, 'version': version}
             last = browser
-
-    name = None
-    idx = None
 
     if 'Safari' in brs and 'Chrome' not in brs:
         name = 'Safari'
