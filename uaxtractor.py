@@ -126,7 +126,6 @@ def parse_browser(data: str):
         browser = m.group(1)
         fullversion = m.group(2)
         version = m.group(3)
-        print(browser, fullversion)
         if browser == 'Mozilla':
             continue
         n += 1
