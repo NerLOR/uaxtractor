@@ -12,5 +12,6 @@ if __name__ == '__main__':
     for filename in os.listdir(args.sess_dir):
         if not filename.startswith('sess_'):
             continue
-        with open(f'{args.sess_dir}/{filename}', 'rb') as sess:
-            print(phpserialize.loads(sess.read()))
+        with open(f'{args.sess_dir}/{filename}', 'rb') as f:
+            session = phpserialize.loads(f.read(), decode_strings=True)
+            print(session)
