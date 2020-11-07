@@ -126,15 +126,26 @@ def parse_parenthesis(data: str):
             else:
                 obj['os']['version'] = None
     elif dev[0] == 'compatible':
+        # TODO Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0) -> Win 7 IE 9
         p1 = dev[1].find('/')
-        if p1 >= 0:
+        if dev[1].startswith('MSIE '):
+            obj['device']['type'] = 'desktop'
+            obj['device']['mobile'] = False
+            obj['os']['family'] = 'windows'
+            obj['os']['name'] = 'Windows'
+            obj['os']['version'] = WIN_VER[dev[2]]
+            obj['browser']['name'] = 'Internet Explorer'
+            v = dev[1][5:]
+            obj['browser']['version'] = v[:v.find('.')]
+            obj['browser']['fullversion'] = v
+        elif p1 >= 0:
             obj['software']['name'] = dev[1][:p1]
             obj['software']['version'] = dev[1][p1 + 1:]
         else:
             obj['software']['name'] = dev[1]
-        if obj['software']['name'] in ('Googlebot', 'DuckDuckGo-Favicons-Bot') or 'crawler' in obj['software']['name'].lower():
+        if obj['software']['name'] in ('Googlebot', 'DuckDuckGo-Favicons-Bot') or obj['software']['name'] and 'crawler' in obj['software']['name'].lower():
             obj['category'] = 'crawler'
-        elif obj['software']['name'] in ('Discordbot'):
+        elif obj['software']['name'] and obj['software']['name'] in ('Discordbot'):
             obj['category'] = 'preview'
         else:
             obj['category'] = 'bot'
