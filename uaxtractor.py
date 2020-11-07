@@ -93,21 +93,25 @@ def parse_parenthesis(data: str):
         obj['device']['mobile'] = False
         obj['os']['family'] = 'macos'
         obj['os']['name'] = 'macOS'
-        m = MACOS_PATTERN.search(dev[1])
-        if m:
-            obj['os']['version'] = m.group(1) + '.' + m.group(2)
-        else:
-            obj['os']['version'] = None
+        for d in dev:
+            m = MACOS_PATTERN.search(d)
+            if m:
+                obj['os']['version'] = m.group(1) + '.' + m.group(2)
+                break
+            else:
+                obj['os']['version'] = None
     elif dev[0] == 'iPhone':
         obj['device']['type'] = 'smartphone'
         obj['device']['mobile'] = True
         obj['os']['family'] = 'ios'
         obj['os']['name'] = 'iOS'
-        m = IOS_PATTERN.search(dev[1])
-        if m:
-            obj['os']['version'] = m.group(1)
-        else:
-            obj['os']['version'] = None
+        for d in dev:
+            m = IOS_PATTERN.search(d)
+            if m:
+                obj['os']['version'] = m.group(1)
+                break
+            else:
+                obj['os']['version'] = None
     elif dev[0] == 'compatible':
         p1 = dev[1].find('/')
         if p1 >= 0:
