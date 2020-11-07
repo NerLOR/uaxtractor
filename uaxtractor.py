@@ -241,6 +241,10 @@ if __name__ == '__main__':
         obj['software']['name'] = 'Python'
         obj['software']['libname'] = 'requests'
         obj['software']['libversion'] = ua[16:]
+    elif ua.startswith('Go-http-client/'):
+        obj['software']['name'] = 'Go'
+        obj['software']['libname'] = 'http-client'
+        obj['software']['libversion'] = ua[15:]
     else:
         obj['category'] = 'other'
 
