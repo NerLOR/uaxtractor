@@ -267,6 +267,8 @@ if __name__ == '__main__':
     elif ua == 'Go http package':
         obj['software']['name'] = 'Go'
         obj['software']['libname'] = 'http package'
+    elif ua == 'Microsoft Windows Network Diagnostics':
+        obj['software']['name'] = ua
     else:
         obj['category'] = 'other'
 
