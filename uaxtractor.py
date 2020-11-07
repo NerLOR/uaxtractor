@@ -209,15 +209,15 @@ if __name__ == '__main__':
         parse_browser(ua)
 
     elif ua.startswith('Lynx/'):
-        obj['software']['name'] = 'lynx'
+        obj['software']['name'] = 'Lynx'
         obj['software']['version'] = ua[5:ua.find(' ')]
     elif ua.startswith('Python-urllib/'):
-        obj['software']['name'] = 'python'
+        obj['software']['name'] = 'Python'
         obj['software']['version'] = None
         obj['software']['libname'] = 'urllib'
         obj['software']['libversion'] = ua[14:]
     elif ua.startswith('Python/'):
-        obj['software']['name'] = 'python'
+        obj['software']['name'] = 'Python'
         p1 = ua.find(' ')
         p2 = ua.find('/', p1)
         obj['software']['version'] = ua[7:p1]
@@ -225,8 +225,11 @@ if __name__ == '__main__':
         obj['software']['libversion'] = ua[p2 + 1:]
     elif ua.startswith('WhatsApp/'):
         obj['category'] = 'preview'
-        obj['software']['name'] = 'whatsapp'
+        obj['software']['name'] = 'WhatsApp'
         obj['software']['version'] = ua[9:ua.find(' ')]
+    elif ua.startswith('TelegramBot'):
+        obj['category'] = 'preview'
+        obj['software']['name'] = 'TelegramBot'
     elif ua.startswith('curl/'):
         obj['software']['name'] = 'curl'
         obj['software']['version'] = ua[5:]
@@ -235,7 +238,7 @@ if __name__ == '__main__':
         obj['software']['libname'] = 'libwww'
         obj['software']['libversion'] = ua[12:]
     elif ua.startswith('python-requests'):
-        obj['software']['name'] = 'python'
+        obj['software']['name'] = 'Python'
         obj['software']['libname'] = 'requests'
         obj['software']['libversion'] = ua[16:]
     else:
