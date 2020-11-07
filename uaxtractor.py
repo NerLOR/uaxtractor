@@ -76,6 +76,8 @@ def parse_parenthesis(data: str):
         obj['os']['family'] = 'linux'
         if 'Ubuntu' in dev:
             obj['os']['name'] = 'Ubuntu'
+        elif 'Fedora' in dev:
+            obj['os']['name'] = 'Fedora'
     elif dev[0] == 'Linux' and dev[1].startswith('Android'):
         obj['device']['type'] = 'smartphone'
         obj['device']['mobile'] = True
