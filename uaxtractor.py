@@ -177,7 +177,7 @@ def parse_browser(data: str):
             brs[browser] = {'fullversion': fullversion, 'version': version}
             last = browser
 
-    if 'Safari' in brs and 'Chrome' not in brs:
+    if 'Safari' in brs and 'Chrome' not in brs and 'CrMo' not in brs:
         name = 'Safari'
         idx = 'Safari'
         brs[idx]['fullversion'] = brs['Version']['fullversion']
@@ -185,6 +185,9 @@ def parse_browser(data: str):
     elif 'Chrome' in brs:
         name = 'Chrome'
         idx = 'Chrome'
+    elif 'CrMo' in brs:
+        name = 'Chrome'
+        idx = 'CrMo'
     else:
         name = last
         idx = last
