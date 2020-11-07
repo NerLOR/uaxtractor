@@ -260,6 +260,9 @@ if __name__ == '__main__':
         obj['category'] = 'crawler'
         obj['software']['name'] = 'Googlebot-Image'
         obj['software']['version'] = ua[16:]
+    elif ua == 'Go http package':
+        obj['software']['name'] = 'Go'
+        obj['software']['libname'] = 'http package'
     else:
         obj['category'] = 'other'
 
