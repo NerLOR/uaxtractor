@@ -130,7 +130,6 @@ def parse_parenthesis(data: str):
             else:
                 obj['os']['version'] = None
     elif dev[0] == 'compatible':
-        # TODO Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0) -> Win 7 IE 9
         p1 = dev[1].find('/')
         if dev[1].startswith('MSIE '):
             obj['device']['type'] = 'desktop'
@@ -167,7 +166,7 @@ def parse_browser(data: str):
     brs = {}
     last = None
     n = 0
-    for m in BROWSER_PATTERN.finditer(data):
+    for m in BROWSER_PATTERN.finditer(re.sub(r'\(.*?\)', '', data)):
         browser = m.group(1)
         fullversion = m.group(2)
         version = m.group(3)
