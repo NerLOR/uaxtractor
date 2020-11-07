@@ -13,4 +13,4 @@ if __name__ == '__main__':
         if not filename.startswith('sess_'):
             continue
         with open(f'{args.sess_dir}/{filename}', 'r') as sess:
-            print(phpserialize.load(sess))
+            print(phpserialize.loads(sess.read()))
