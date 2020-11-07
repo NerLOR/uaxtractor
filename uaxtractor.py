@@ -271,6 +271,13 @@ if __name__ == '__main__':
         obj['software']['libname'] = 'http package'
     elif ua == 'Microsoft Windows Network Diagnostics':
         obj['software']['name'] = ua
+    elif ua.startswith('Java/'):
+        obj['software']['name'] = 'Java'
+        v = ua[5:]
+        p = v.find('_')
+        if p != -1:
+            v = v[:p]
+        obj['software']['version'] = v
     else:
         obj['category'] = 'other'
 
