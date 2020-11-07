@@ -5,6 +5,8 @@ import re
 import json
 
 BROWSER_PATTERN = re.compile(r'([A-Za-z0-9]+)/((\d+)(\.\d+)*)')
+MACOS_PATTERN = re.compile(r'Mac OS X (\d+)_(\d+)_(\d+)')
+IOS_PATTERN = re.compile(r'iPhone OS (\d+)_(\d+)')
 
 WIN_VER = {
     'Windows ME': 'ME',
@@ -81,20 +83,31 @@ def parse_parenthesis(data: str):
         obj['os']['family'] = 'android'
         obj['os']['name'] = 'Android'
         ver = dev[1][8:]
-        obj['os']['version'] = ver[:ver.find('.')]
+        p = ver.find('.')
+        if p == -1:
+            obj['os']['version'] = ver
+        else:
+            obj['os']['version'] = ver[:ver.find('.')]
     elif dev[0] == 'Macintosh':
         obj['device']['type'] = 'desktop'
         obj['device']['mobile'] = False
         obj['os']['family'] = 'macos'
         obj['os']['name'] = 'macOS'
-        obj['os']['version'] = None
+        m = MACOS_PATTERN.search(dev[1])
+        if m:
+            obj['os']['version'] = m.group(1) + '.' + m.group(2)
+        else:
+            obj['os']['version'] = None
     elif dev[0] == 'iPhone':
         obj['device']['type'] = 'smartphone'
         obj['device']['mobile'] = True
         obj['os']['family'] = 'ios'
         obj['os']['name'] = 'iOS'
-        obj['os']['version'] = None
-        # TODO
+        m = IOS_PATTERN.search(dev[1])
+        if m:
+            obj['os']['version'] = m.group(1)
+        else:
+            obj['os']['version'] = None
     elif dev[0] == 'compatible':
         p1 = dev[1].find('/')
         if p1 >= 0:
@@ -136,6 +149,8 @@ def parse_browser(data: str):
     if 'Safari' in brs and 'Chrome' not in brs:
         name = 'Safari'
         idx = 'Safari'
+        brs[idx]['fullversion'] = brs['Version']['fullversion']
+        brs[idx]['version'] = brs['Version']['version']
     elif 'Chrome' in brs:
         name = 'Chrome'
         idx = 'Chrome'
@@ -208,5 +223,10 @@ if __name__ == '__main__':
         obj['software']['libversion'] = ua[16:]
     else:
         obj['category'] = 'other'
+
+    if obj['software']['version'] == '':
+        obj['software']['version'] = None
+    if obj['software']['libversion'] == '':
+        obj['software']['libversion'] = None
 
     print(json.dumps(obj))
