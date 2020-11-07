@@ -81,10 +81,14 @@ def parse_parenthesis(data: str):
     elif dev[0] == 'Linux' and dev[1].startswith('Android'):
         obj['device']['type'] = 'smartphone'
         obj['device']['mobile'] = True
-        obj['device']['name'] = dev[2]
+        if dev[1].startswith('Android'):
+            d = dev[1]
+        else:
+            d = dev[2]
+        # obj['device']['name'] = dev[2]
         obj['os']['family'] = 'android'
         obj['os']['name'] = 'Android'
-        ver = dev[1][8:]
+        ver = d[8:]
         p = ver.find('.')
         if p == -1:
             obj['os']['version'] = ver
