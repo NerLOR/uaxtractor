@@ -5,6 +5,7 @@ import os
 import phpserialize
 import re
 import datetime
+import json
 
 import uaxtractor
 
@@ -108,14 +109,16 @@ if __name__ == '__main__':
 
     final_sessions.sort(key=lambda s: s['last'])
 
-    for sess in final_sessions:
-        creation = datetime.datetime.utcfromtimestamp(sess['creation'])
-        last = datetime.datetime.utcfromtimestamp(sess['last'])
-        print(f'{sess["sess_id"]} '
-              f'{creation.strftime("%Y-%m-%d (%H:%M)")}  {last.strftime("%Y-%m-%d (%H:%M)")}'
-              f'{sess["visits"]:4} {sess["user"] if "user" in sess else "-":8} '
-              f'{sess["uax"]["category"]:10} '
-              f'{(sess["uax"]["os"]["name"] or "-") + " " + (sess["uax"]["os"]["version"] or ""):16} '
-              f'{(sess["uax"]["browser"]["name"] or "-") + " " + (sess["uax"]["browser"]["version"] or ""):20} '
-              f'{(sess["uax"]["software"]["name"] or "-") + " " + (sess["uax"]["software"]["version"] or ""):32} '
-              f'{sess["history"][-1]["host"]} ({sess["history"][-1]["address"]}) ')
+    print(json.dumps(final_sessions))
+
+    #for sess in final_sessions:
+    #    creation = datetime.datetime.utcfromtimestamp(sess['creation'])
+    #    last = datetime.datetime.utcfromtimestamp(sess['last'])
+    #    print(f'{sess["sess_id"]} '
+    #          f'{creation.strftime("%Y-%m-%d (%H:%M)")}  {last.strftime("%Y-%m-%d (%H:%M)")}'
+    #          f'{sess["visits"]:4} {sess["user"] if "user" in sess else "-":8} '
+    #          f'{sess["uax"]["category"]:10} '
+    #          f'{(sess["uax"]["os"]["name"] or "-") + " " + (sess["uax"]["os"]["version"] or ""):16} '
+    #          f'{(sess["uax"]["browser"]["name"] or "-") + " " + (sess["uax"]["browser"]["version"] or ""):20} '
+    #          f'{(sess["uax"]["software"]["name"] or "-") + " " + (sess["uax"]["software"]["version"] or ""):32} '
+    #          f'{sess["history"][-1]["host"]} ({sess["history"][-1]["address"]}) ')
