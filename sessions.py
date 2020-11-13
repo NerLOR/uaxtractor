@@ -5,6 +5,8 @@ import os
 import phpserialize
 
 
+sessions = []
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('sess_dir', type=str)
@@ -14,4 +16,6 @@ if __name__ == '__main__':
             continue
         with open(f'{args.sess_dir}/{filename}', 'rb') as f:
             session = phpserialize.loads(f.read(), decode_strings=True)
-            print(session)
+            sessions.append(session)
+    sessions.sort(lambda sess: sess['timestamp'])
+    print(sessions)
