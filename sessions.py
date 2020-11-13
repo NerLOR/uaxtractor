@@ -17,5 +17,5 @@ if __name__ == '__main__':
         with open(f'{args.sess_dir}/{filename}', 'rb') as f:
             session = phpserialize.loads(f.read(), decode_strings=True)
             sessions.append(session)
-    sessions.sort(key='timestamp')
+    sessions.sort(key=lambda sess: sess['timestamp'])
     print(sessions)
