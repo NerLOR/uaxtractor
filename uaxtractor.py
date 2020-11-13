@@ -1,5 +1,6 @@
 #!/bin/env python3
 
+from typing import Dict
 import argparse
 import re
 import json
@@ -28,36 +29,8 @@ WIN_VER = {
     'Windows NT 10.0': '10'
 }
 
-obj = {
-    'category': 'other',  # other, browser, crawler, preview, bot
-    'device': {
-        'type': None,
-        'brand': None,
-        'name': None,
-        'version': None,
-        'mobile': None
-    },
-    'os': {
-        'family': None,
-        'name': None,
-        'version': None
-    },
-    'browser': {
-        'name': None,
-        'version': None,
-        'fullversion': None,
-        'engine': None
-    },
-    'software': {
-        'name': None,
-        'version': None,
-        'libname': None,
-        'libversion': None
-    }
-}
 
-
-def parse_parenthesis(data: str):
+def _parse_parenthesis(data: str, obj: Dict) -> Dict:
     dev = [part.strip() for part in data.split(';')]
     if dev[0] == 'Windows':
         for d in dev:
@@ -68,8 +41,11 @@ def parse_parenthesis(data: str):
         obj['device']['type'] = 'desktop'
         obj['device']['mobile'] = False
         obj['os']['family'] = 'windows'
-        obj['os']['name'] = 'Windows'
-        obj['os']['version'] = WIN_VER[dev[0]]
+        if dev[0] in WIN_VER:
+            obj['os']['name'] = 'Windows'
+            obj['os']['version'] = WIN_VER[dev[0]]
+        else:
+            obj['os']['name'] = dev[0]
     elif dev[0] == 'X11':
         obj['device']['type'] = 'desktop',
         obj['device']['mobile'] = False
@@ -135,8 +111,11 @@ def parse_parenthesis(data: str):
             obj['device']['type'] = 'desktop'
             obj['device']['mobile'] = False
             obj['os']['family'] = 'windows'
-            obj['os']['name'] = 'Windows'
-            obj['os']['version'] = WIN_VER[dev[2]]
+            if dev[2] in WIN_VER:
+                obj['os']['name'] = 'Windows'
+                obj['os']['version'] = WIN_VER[dev[2]]
+            else:
+                obj['os']['name'] = WIN_VER[dev[2]]
             obj['browser']['name'] = 'Internet Explorer'
             v = dev[1][5:]
             obj['browser']['version'] = v[:v.find('.')]
@@ -146,7 +125,7 @@ def parse_parenthesis(data: str):
             obj['software']['version'] = dev[1][p1 + 1:]
         else:
             obj['software']['name'] = dev[1]
-        if obj['software']['name'] in ('Googlebot', 'DuckDuckGo-Favicons-Bot') or obj['software']['name'] and 'crawler' in obj['software']['name'].lower():
+        if obj['software']['name'] in ('Googlebot', 'DuckDuckGo-Favicons-Bot', 'Baiduspider') or obj['software']['name'] and 'crawler' in obj['software']['name'].lower():
             obj['category'] = 'crawler'
         elif obj['software']['name'] and obj['software']['name'] in ('Discordbot'):
             obj['category'] = 'preview'
@@ -161,8 +140,10 @@ def parse_parenthesis(data: str):
                 obj['browser']['version'] = d[3:d.find('.')]
                 obj['browser']['fullversion'] = d[3:]
 
+    return obj
 
-def parse_browser(data: str):
+
+def _parse_browser(data: str, obj: Dict) -> Dict:
     brs = {}
     last = None
     n = 0
@@ -207,12 +188,41 @@ def parse_browser(data: str):
         obj['browser']['fullversion'] = br['fullversion']
         obj['browser']['version'] = br['version']
 
+    return obj
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('ua_string', type=str)
-    args = parser.parse_args()
-    ua = args.ua_string
+
+def parse_user_agent(ua: str) -> Dict[str, str]:
+    obj = {
+        'category': 'other',  # other, browser, crawler, preview, bot
+        'device': {
+            'type': None,
+            'brand': None,
+            'name': None,
+            'version': None,
+            'mobile': None
+        },
+        'os': {
+            'family': None,
+            'name': None,
+            'version': None
+        },
+        'browser': {
+            'name': None,
+            'version': None,
+            'fullversion': None,
+            'engine': None
+        },
+        'software': {
+            'name': None,
+            'version': None,
+            'libname': None,
+            'libversion': None
+        }
+    }
+
+    if type(ua) != str:
+        obj['category'] = 'none'
+        return obj
 
     if ua.startswith('Mozilla/'):
         obj['category'] = 'browser'
@@ -222,8 +232,8 @@ if __name__ == '__main__':
             if p1 < 0:
                 break
             p2 = ua.find(')', p1)
-            parse_parenthesis(ua[p1 + 1:p2])
-        parse_browser(ua)
+            obj = _parse_parenthesis(ua[p1 + 1:p2], obj)
+        obj = _parse_browser(ua, obj)
 
     elif ua.startswith('Lynx/'):
         obj['software']['name'] = 'Lynx'
@@ -286,4 +296,11 @@ if __name__ == '__main__':
     if obj['software']['libversion'] == '':
         obj['software']['libversion'] = None
 
-    print(json.dumps(obj))
+    return obj
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('ua_string', type=str)
+    args = parser.parse_args()
+    print(json.dumps(parse_user_agent(args.ua_string)))
