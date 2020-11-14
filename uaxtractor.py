@@ -125,7 +125,7 @@ def _parse_parenthesis(data: str, obj: Dict) -> Dict:
             obj['software']['version'] = dev[1][p1 + 1:]
         else:
             obj['software']['name'] = dev[1]
-        if obj['software']['name'] in ('Googlebot', 'DuckDuckGo-Favicons-Bot', 'Baiduspider') or obj['software']['name'] and 'crawler' in obj['software']['name'].lower():
+        if obj['software']['name'] in ('Googlebot', 'DuckDuckGo-Favicons-Bot', 'Baiduspider', 'CensysInspect') or obj['software']['name'] and 'crawler' in obj['software']['name'].lower():
             obj['category'] = 'crawler'
         elif obj['software']['name'] and obj['software']['name'] in ('Discordbot'):
             obj['category'] = 'preview'
