@@ -32,7 +32,8 @@ def is_ip_address(hostname: str) -> bool:
 def get_crawler_id(session) -> str:
     hostname = session['history'][0]['host']
     if is_ip_address(hostname):
-        tld = hostname
+        p = hostname.rfind('.')
+        tld = hostname[:p]
     else:
         tld = get_tld(hostname)
     # version = session['uax']['software']['name'] + '/' + session['uax']['software']['version']
