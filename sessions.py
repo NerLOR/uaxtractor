@@ -10,7 +10,7 @@ import json
 import uaxtractor
 
 
-TLD_PATTERN = re.compile(r'[^.]+\.(.*)')
+TLD_PATTERN = re.compile(r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[^.]+)\.(.*)')
 IP_ADDRESS_PATTERN = re.compile(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
 
 sessions = []
@@ -22,7 +22,7 @@ final_sessions = []
 
 def get_tld(hostname: str) -> str:
     m = TLD_PATTERN.match(hostname)
-    return m.group(1)
+    return m.group(2)
 
 
 def is_ip_address(hostname: str) -> bool:
