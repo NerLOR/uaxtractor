@@ -72,28 +72,27 @@ if __name__ == '__main__':
 
     for sess in sessions:
         sess_id = sess['sess_id']
-        if sess['visits'] == 1:
-            if sess['uax']['category'] in 'crawler':
-                cid = get_crawler_id(sess)
-                if cid not in crawler_ids:
-                    crawler_ids[cid] = sess_id
-                    virtual_sessions[sess_id] = sess
-                else:
-                    v_sess = virtual_sessions[crawler_ids[cid]]
-                    v_sess['visits'] += sess['visits']
-                    v_sess['last'] = max(v_sess['last'], sess['last'])
-                    for nr, req in sess['history'].items():
-                        v_sess['history'][len(v_sess['history'])] = req
+        if sess['uax']['category'] in ('crawler', 'preview'):
+            cid = get_crawler_id(sess)
+            if cid not in crawler_ids:
+                crawler_ids[cid] = sess_id
+                virtual_sessions[sess_id] = sess
             else:
-                bsid = get_bot_session_id(sess)
-                if bsid in virtual_sessions:
-                    v_sess = virtual_sessions[bsid]
-                    v_sess['visits'] += sess['visits']
-                    v_sess['last'] = max(v_sess['last'], sess['last'])
-                    for nr, req in sess['history'].items():
-                        v_sess['history'][len(v_sess['history'])] = req
-                else:
-                    virtual_sessions[sess_id] = sess
+                v_sess = virtual_sessions[crawler_ids[cid]]
+                v_sess['visits'] += sess['visits']
+                v_sess['last'] = max(v_sess['last'], sess['last'])
+                for nr, req in sess['history'].items():
+                    v_sess['history'][len(v_sess['history'])] = req
+        elif sess['visits'] == 1:
+            bsid = get_bot_session_id(sess)
+            if bsid in virtual_sessions:
+                v_sess = virtual_sessions[bsid]
+                v_sess['visits'] += sess['visits']
+                v_sess['last'] = max(v_sess['last'], sess['last'])
+                for nr, req in sess['history'].items():
+                    v_sess['history'][len(v_sess['history'])] = req
+            else:
+                virtual_sessions[sess_id] = sess
         else:
             virtual_sessions[sess_id] = sess
 
