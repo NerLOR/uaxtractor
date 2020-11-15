@@ -32,7 +32,7 @@ def get_crawler_id(session) -> str:
     hostname = session['history'][len(session['history']) - 1]['host']
     if hostname is None or hostname == '':
         hostname = session['history'][len(session['history']) - 1]['address']
-    print(hostname)
+    print(hostname, file=sys.stderr)
     if is_ip_address(hostname):
         p = hostname.rfind('.')
         tld = hostname[:p]
