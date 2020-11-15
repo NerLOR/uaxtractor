@@ -4,7 +4,7 @@ import argparse
 import os
 import phpserialize
 import re
-import datetime
+import sys
 import json
 
 import uaxtractor
@@ -22,7 +22,11 @@ final_sessions = []
 
 def get_tld(hostname: str) -> str:
     m = TLD_PATTERN.match(hostname)
-    return m.group(2)
+    if m:
+        return m.group(2)
+    else:
+        print(hostname, file=sys.stderr)
+        return hostname
 
 
 def is_ip_address(hostname: str) -> bool:
