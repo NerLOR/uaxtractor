@@ -32,13 +32,13 @@ def get_crawler_id(session) -> str:
     hostname = session['history'][len(session['history']) - 1]['host']
     if hostname is None or hostname == '':
         hostname = session['history'][len(session['history']) - 1]['address']
-    if type(hostname) != str:
-        print(session, file=sys.stderr)
-    if is_ip_address(hostname):
+    if hostname and is_ip_address(hostname):
         p = hostname.rfind('.')
         tld = hostname[:p]
-    else:
+    elif hostname:
         tld = get_tld(hostname)
+    else:
+        tld = '?'
     # version = session['uax']['software']['name'] + '/' + session['uax']['software']['version']
     return f'{tld}#{session["useragent"]}'
 
