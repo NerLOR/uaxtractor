@@ -21,12 +21,7 @@ final_sessions = []
 
 
 def get_tld(hostname: str) -> str:
-    m = TLD_PATTERN.match(hostname)
-    if m:
-        return m.group(2)
-    else:
-        print(hostname, file=sys.stderr)
-        return hostname
+    return TLD_PATTERN.match(hostname).group(2)
 
 
 def is_ip_address(hostname: str) -> bool:
@@ -35,6 +30,8 @@ def is_ip_address(hostname: str) -> bool:
 
 def get_crawler_id(session) -> str:
     hostname = session['history'][0]['host']
+    if hostname is None or hostname == '':
+        hostname = session['history'][0]['address']
     if is_ip_address(hostname):
         p = hostname.rfind('.')
         tld = hostname[:p]
