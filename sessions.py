@@ -29,9 +29,9 @@ def is_ip_address(hostname: str) -> bool:
 
 
 def get_crawler_id(session) -> str:
-    hostname = session['history'][-1]['host']
+    hostname = session['history'][len(session['history']) - 1]['host']
     if hostname is None or hostname == '':
-        hostname = session['history'][-1]['address']
+        hostname = session['history'][len(session['history']) - 1]['address']
     print(hostname)
     if is_ip_address(hostname):
         p = hostname.rfind('.')
@@ -47,7 +47,7 @@ def get_bot_session_id(session) -> str:
     for sess_id, sess in virtual_sessions.items():
         if get_crawler_id(sess) == cid:
             for nr, req in sess['history'].items():
-                if abs(req['timestamp'] - session['history'][-1]['timestamp']) < 60 * 60:
+                if abs(req['timestamp'] - session['history'][len(session['history']) - 1]['timestamp']) < 60 * 60:
                     return sess_id
     return session['sess_id']
 
