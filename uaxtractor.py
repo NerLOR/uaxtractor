@@ -158,11 +158,14 @@ def _parse_browser(data: str, obj: Dict) -> Dict:
             brs[browser] = {'fullversion': fullversion, 'version': version}
             last = browser
 
+    name = None
+    idx = None
     if 'Safari' in brs and 'Chrome' not in brs and 'CrMo' not in brs:
-        name = 'Safari'
-        idx = 'Safari'
-        brs[idx]['fullversion'] = brs['Version']['fullversion']
-        brs[idx]['version'] = brs['Version']['version']
+        if 'Version' in brs:
+            name = 'Safari'
+            idx = 'Safari'
+            brs[idx]['fullversion'] = brs['Version']['fullversion']
+            brs[idx]['version'] = brs['Version']['version']
     elif 'Chrome' in brs:
         name = 'Chrome'
         idx = 'Chrome'
